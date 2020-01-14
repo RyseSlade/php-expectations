@@ -1,0 +1,27 @@
+{
+    "name": "aedon/php-expectations",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "phpstan/phpstan": "^0.12",
+        "mikey179/vfsstream": "^1.6.8",
+        "infection/infection":"^0.15.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aedon\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aedon\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse -c phpstan.neon",
+        "test": "phpdbg -qrr ./vendor/bin/phpunit --testdox"
+    }
+}
