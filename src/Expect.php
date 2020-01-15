@@ -63,7 +63,7 @@ final class Expect
      */
     static public function isNotEmpty($value): void
     {
-        if ($value !== null && !empty($value)) {
+        if ($value !== null && !empty($value) && $value !== '0.0') {
             return;
         }
 
@@ -197,11 +197,11 @@ final class Expect
      */
     static public function isLowerThan($value, $maxValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && (float)$value < (float)$maxValue) {
+        if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && $value < $maxValue) {
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be lower than ' . (float)$maxValue);
+        self::throwException(RangeException::class, 'Value must be lower than ' . $maxValue);
     }
 
     /**
@@ -210,11 +210,11 @@ final class Expect
      */
     static public function isLowerThanOrEqual($value, $maxValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && (float)$value <= (float)$maxValue) {
+        if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && $value <= $maxValue) {
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be lower than or equal ' . (float)$maxValue);
+        self::throwException(RangeException::class, 'Value must be lower than or equal ' . $maxValue);
     }
 
     /**
@@ -223,11 +223,11 @@ final class Expect
      */
     static public function isGreaterThan($value, $minValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && (float)$value > (float)$minValue) {
+        if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && $value > $minValue) {
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be greater than ' . (float)$minValue);
+        self::throwException(RangeException::class, 'Value must be greater than ' . $minValue);
     }
 
     /**
@@ -236,11 +236,11 @@ final class Expect
      */
     static public function isGreaterThanOrEqual($value, $minValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && (float)$value <= (float)$minValue) {
+        if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && $value >= $minValue) {
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be greater than or equal ' . (float)$minValue);
+        self::throwException(RangeException::class, 'Value must be greater than or equal ' . $minValue);
     }
 
     /**
@@ -310,7 +310,7 @@ final class Expect
      */
     static public function isFileReadable(string $file): void
     {
-        if (file_exists($file) && is_readable($file)) {
+        if (file_exists($file) && is_file($file) && is_readable($file)) {
             return;
         }
 
@@ -322,7 +322,7 @@ final class Expect
      */
     static public function isFileWritable(string $file): void
     {
-        if (file_exists($file) && is_writable($file)) {
+        if (file_exists($file) && is_file($file) && is_writable($file)) {
             return;
         }
 
@@ -412,5 +412,29 @@ final class Expect
         }
 
         self::throwException(UnexpectedValueException::class, 'Object must be a subclass of ' . $parentClass);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    static public function isNotFalse($value): void
+    {
+        if ($value !== false) {
+            return;
+        }
+
+        self::throwException(InvalidArgumentException::class, 'Value must not be false');
+    }
+
+    /**
+     * @param mixed $value
+     */
+    static public function isNotTrue($value): void
+    {
+        if ($value !== true) {
+            return;
+        }
+
+        self::throwException(InvalidArgumentException::class, 'Value must not be true');
     }
 }
