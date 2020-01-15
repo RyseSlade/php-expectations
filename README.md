@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/RyseSlade/php-expectations.svg)](https://github.com/RyseSlade/php-expectations/releases/)
 [![Build Status](https://travis-ci.org/RyseSlade/php-expectations.svg?branch=master)](https://travis-ci.org/RyseSlade/php-expectations)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/RyseSlade/php-expectations/master)](https://badge.stryker-mutator.io/github.com/RyseSlade/php-expectations)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FRyseSlade%2Fphp-expectations%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/RyseSlade/php-expectations/master)
 [![GitHub license](https://img.shields.io/badge/license-MIT-green)](https://github.com/RyseSlade/php-expectations/blob/master/LICENSE)
 
 Reduce lines of code with this expectations library. Use expectations for conditional exceptions.
