@@ -842,32 +842,32 @@ class ExpectTest extends TestCase
         Expect::isFile($value);
     }
 
-    public function testIsFileReadableShouldThrowException(): void
+    public function testIsReadableFileShouldThrowException(): void
     {
         $vfs = vfsStream::setup('var', null, [
             'test.log' => '',
         ]);
 
         $value = $vfs->getChild('var/test.log')->url();
-        Expect::isFileReadable($value);
+        Expect::isReadableFile($value);
 
         $value = $vfs->url();
         self::expectException(InvalidArgumentException::class);
-        Expect::isFileReadable($value);
+        Expect::isReadableFile($value);
     }
 
-    public function testIsFileWritableShouldThrowException(): void
+    public function testIsWritableFileShouldThrowException(): void
     {
         $vfs = vfsStream::setup('var', null, [
             'test.log' => '',
         ]);
 
         $value = $vfs->getChild('var/test.log')->url();
-        Expect::isFileWritable($value);
+        Expect::isWritableFile($value);
 
         $value = $vfs->url();
         self::expectException(InvalidArgumentException::class);
-        Expect::isFileWritable($value);
+        Expect::isWritableFile($value);
     }
 
     public function testIsPathShouldThrowException(): void
@@ -884,32 +884,32 @@ class ExpectTest extends TestCase
         Expect::isPath($value);
     }
 
-    public function testIsPathReadableShouldThrowException(): void
+    public function testIsReadablePathShouldThrowException(): void
     {
         $vfs = vfsStream::setup('var', null, [
             'test.log' => '',
         ]);
 
         $value = $vfs->url();
-        Expect::isPathReadable($value);
+        Expect::isReadablePath($value);
 
         $value = $vfs->getChild('var/test.log')->url();
         self::expectException(InvalidArgumentException::class);
-        Expect::isPathReadable($value);
+        Expect::isReadablePath($value);
     }
 
-    public function testIsPathWritableShouldThrowException(): void
+    public function testIsWritablePathShouldThrowException(): void
     {
         $vfs = vfsStream::setup('var', null, [
             'test.log' => '',
         ]);
 
         $value = $vfs->url();
-        Expect::isPathWritable($value);
+        Expect::isWritablePath($value);
 
         $value = $vfs->getChild('var/test.log')->url();
         self::expectException(InvalidArgumentException::class);
-        Expect::isPathWritable($value);
+        Expect::isWritablePath($value);
     }
 
     public function provideIsCountableData(): array

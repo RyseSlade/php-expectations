@@ -308,7 +308,7 @@ final class Expect
     /**
      * @param string $file
      */
-    static public function isFileReadable(string $file): void
+    static public function isReadableFile(string $file): void
     {
         if (file_exists($file) && is_file($file) && is_readable($file)) {
             return;
@@ -320,7 +320,7 @@ final class Expect
     /**
      * @param string $file
      */
-    static public function isFileWritable(string $file): void
+    static public function isWritableFile(string $file): void
     {
         if (file_exists($file) && is_file($file) && is_writable($file)) {
             return;
@@ -344,7 +344,7 @@ final class Expect
     /**
      * @param string $path
      */
-    static public function isPathReadable(string $path): void
+    static public function isReadablePath(string $path): void
     {
         if (is_dir($path) && is_readable($path)) {
             return;
@@ -356,7 +356,7 @@ final class Expect
     /**
      * @param string $path
      */
-    static public function isPathWritable(string $path): void
+    static public function isWritablePath(string $path): void
     {
         if (is_dir($path) && is_writable($path)) {
             return;
