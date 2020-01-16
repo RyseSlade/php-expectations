@@ -7,6 +7,10 @@
 
 Reduce lines of code with this expectations library. Use expectations for conditional exceptions.
 
+### Requirements
+
+PHP 7.3+
+
 ### Usage examples
 
 #### Basic example
