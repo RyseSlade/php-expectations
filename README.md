@@ -33,6 +33,6 @@ $value = new stdClass();
 
 ### Support
 
-Join Discord: https://discord.gg/xhk7dN
+Join Discord: https://discord.gg/NEfRerY
 
 Aedon PHP Expectations created by Michael "Striker" Berger
