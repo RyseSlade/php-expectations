@@ -11,6 +11,7 @@ use RuntimeException;
 use UnexpectedValueException;
 use function array_key_exists;
 use function array_search;
+use function explode;
 use function file_exists;
 use function is_bool;
 use function is_callable;
@@ -30,14 +31,35 @@ use function is_writable;
 
 final class Expect
 {
+    /** @var string[] */
+    static private $customExceptions = [];
+
     private function __construct()
     {
 
     }
 
-    static private function throwException(string $exceptionType, string $message): void
+    static private function throwException(string $issuer, string $exceptionType, string $message): void
     {
+        $parts = explode('::', $issuer);
+
+        if (isset($parts[1])) {
+            if (isset(self::$customExceptions[$parts[1]])) {
+                $exceptionType = self::$customExceptions[$parts[1]];
+            }
+        }
+
         throw new $exceptionType($message);
+    }
+
+    static public function registerCustomException(string $method, string $exceptionType): void
+    {
+        self::$customExceptions[$method] = $exceptionType;
+    }
+
+    static public function resetCustomExceptions(): void
+    {
+        self::$customExceptions = [];
     }
 
     static public function isTrue(bool $condition): void
@@ -46,7 +68,7 @@ final class Expect
             return;
         }
 
-        self::throwException(RuntimeException::class, 'Expression must be true');
+        self::throwException(__METHOD__, RuntimeException::class, 'Expression must be true');
     }
 
     static public function isFalse(bool $condition): void
@@ -55,7 +77,7 @@ final class Expect
             return;
         }
 
-        self::throwException(RuntimeException::class, 'Expression must be false');
+        self::throwException(__METHOD__, RuntimeException::class, 'Expression must be false');
     }
 
     /**
@@ -67,7 +89,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must not be empty');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must not be empty');
     }
 
     /**
@@ -79,7 +101,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be numeric');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be numeric');
     }
 
     /**
@@ -91,7 +113,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be integer');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be integer');
     }
 
     /**
@@ -103,7 +125,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be float');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be float');
     }
 
     /**
@@ -115,7 +137,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be boolean');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be boolean');
     }
 
     /**
@@ -127,7 +149,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be an object');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be an object');
     }
 
     /**
@@ -139,7 +161,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be string');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be string');
     }
 
     /**
@@ -151,7 +173,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be array');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be array');
     }
 
     /**
@@ -164,7 +186,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Value must be instance of ' . $expectedType);
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Value must be instance of ' . $expectedType);
     }
 
     /**
@@ -176,7 +198,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must be null');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must be null');
     }
 
     /**
@@ -188,7 +210,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must not be null');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must not be null');
     }
 
     /**
@@ -201,7 +223,7 @@ final class Expect
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be lower than ' . $maxValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be lower than ' . $maxValue);
     }
 
     /**
@@ -214,7 +236,7 @@ final class Expect
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be lower than or equal ' . $maxValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be lower than or equal ' . $maxValue);
     }
 
     /**
@@ -227,7 +249,7 @@ final class Expect
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be greater than ' . $minValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be greater than ' . $minValue);
     }
 
     /**
@@ -240,7 +262,7 @@ final class Expect
             return;
         }
 
-        self::throwException(RangeException::class, 'Value must be greater than or equal ' . $minValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be greater than or equal ' . $minValue);
     }
 
     /**
@@ -252,7 +274,7 @@ final class Expect
             return;
         }
 
-        self::throwException(BadFunctionCallException::class, 'Value must be callable');
+        self::throwException(__METHOD__, BadFunctionCallException::class, 'Value must be callable');
     }
 
     /**
@@ -264,7 +286,7 @@ final class Expect
             return;
         }
 
-        self::throwException(BadFunctionCallException::class, 'Value must be invokable');
+        self::throwException(__METHOD__, BadFunctionCallException::class, 'Value must be invokable');
     }
 
     /**
@@ -277,7 +299,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Value must be in array');
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Value must be in array');
     }
 
     /**
@@ -290,7 +312,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Value must be array key');
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Value must be array key');
     }
 
     /**
@@ -302,7 +324,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'File must be valid');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'File must be valid');
     }
 
     /**
@@ -314,7 +336,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'File must be readable');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'File must be readable');
     }
 
     /**
@@ -326,7 +348,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'File must be writable');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'File must be writable');
     }
 
     /**
@@ -338,7 +360,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Path must be valid');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Path must be valid');
     }
 
     /**
@@ -350,7 +372,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Path must be readable');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Path must be readable');
     }
 
     /**
@@ -362,7 +384,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Path must be writable');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Path must be writable');
     }
 
     /**
@@ -374,7 +396,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Value must be countable');
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Value must be countable');
     }
 
     /**
@@ -386,7 +408,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Value must be an iterable');
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Value must be an iterable');
     }
 
     /**
@@ -398,7 +420,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Value must be a resource');
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Value must be a resource');
     }
 
     /**
@@ -411,7 +433,7 @@ final class Expect
             return;
         }
 
-        self::throwException(UnexpectedValueException::class, 'Object must be a subclass of ' . $parentClass);
+        self::throwException(__METHOD__, UnexpectedValueException::class, 'Object must be a subclass of ' . $parentClass);
     }
 
     /**
@@ -423,7 +445,7 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must not be false');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must not be false');
     }
 
     /**
@@ -435,6 +457,6 @@ final class Expect
             return;
         }
 
-        self::throwException(InvalidArgumentException::class, 'Value must not be true');
+        self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must not be true');
     }
 }

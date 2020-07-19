@@ -22,11 +22,44 @@ class DerivedStdClass extends stdClass
 
 class ExpectTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        Expect::resetCustomExceptions();
+    }
+
     public function testShouldThrowErrorOnConstruct(): void
     {
         self::expectException(Error::class);
 
         new Expect();
+    }
+
+    public function testShouldUseProvidedCustomException(): void
+    {
+        self::expectException(RuntimeException::class);
+
+        Expect::isTrue(false);
+
+        Expect::registerCustomException('isTrue', InvalidArgumentException::class);
+
+        self::expectException(InvalidArgumentException::class);
+
+        Expect::isTrue(false);
+    }
+
+    public function testShouldResetCustomsExceptions(): void
+    {
+        Expect::registerCustomException('isTrue', InvalidArgumentException::class);
+
+        self::expectException(InvalidArgumentException::class);
+
+        Expect::isTrue(false);
+
+        Expect::resetCustomExceptions();
+
+        self::expectException(RuntimeException::class);
+
+        Expect::isTrue(false);
     }
 
     public function provideIsTrueData(): array

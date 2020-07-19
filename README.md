@@ -31,6 +31,17 @@ $value = new stdClass();
 \Aedon\Expect::isInstanceOf($value, stdClass::class);
 ```
 
+#### Custom Exceptions
+
+I case you want to change the exception thrown for specific tests.
+
+```php
+\Aedon\Expect::registerCustomException('isTrue', InvalidArgumentException::class);
+
+// This will now throw InvalidArgumentException instead of RuntimeException
+\Aedon\Expect::isTrue(false); 
+```
+
 ### Support
 
 Join Discord: https://discord.gg/NEfRerY
