@@ -33,7 +33,7 @@ $value = new stdClass();
 
 #### Custom Exceptions
 
-I case you want to change the exception thrown for specific tests.
+In case you want to change the exception thrown for specific tests.
 
 ```php
 \Aedon\Expect::registerCustomException('isTrue', InvalidArgumentException::class);
