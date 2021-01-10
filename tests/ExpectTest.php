@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aedon\Test;
 
 use Aedon\Expect;
+use ArrayIterator;
 use BadFunctionCallException;
 use Error;
 use InvalidArgumentException;
@@ -12,6 +13,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use RangeException;
 use RuntimeException;
+use SplFileInfo;
 use stdClass;
 use UnexpectedValueException;
 
@@ -1174,6 +1176,32 @@ class ExpectTest extends TestCase
         }
 
         Expect::isNotTrue($value);
+
+        if (!$expectException) {
+            self::assertTrue(true);
+        }
+    }
+
+    public function provideIsIterableOfData(): array
+    {
+        return [
+            [[new stdClass()], stdClass::class, false],
+            [[1, 2, 3], stdClass::class, true],
+            [new ArrayIterator([new stdClass(), new stdClass()]), stdClass::class, false],
+            [new ArrayIterator([1, 2, 3]), SplFileInfo::class, true],
+        ];
+    }
+
+    /**
+     * @dataProvider provideIsIterableOfData
+     */
+    public function testIsIterableOfShouldThrowException(iterable $iterable, string $type, bool $expectException): void
+    {
+        if ($expectException) {
+            self::expectException(InvalidArgumentException::class);
+        }
+
+        Expect::isIterableOf($iterable, $type);
 
         if (!$expectException) {
             self::assertTrue(true);

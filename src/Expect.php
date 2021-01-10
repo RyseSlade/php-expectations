@@ -459,4 +459,16 @@ final class Expect
 
         self::throwException(__METHOD__, InvalidArgumentException::class, 'Value must not be true');
     }
+
+    /**
+     * @param iterable<mixed> $iterable
+     */
+    static public function isIterableOf(iterable $iterable, string $type): void
+    {
+        foreach ($iterable as $item) {
+            if (!$item instanceof $type) {
+                self::throwException(__METHOD__, InvalidArgumentException::class, 'Iterable must be instance of ' . $type);
+            }
+        }
+    }
 }
