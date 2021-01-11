@@ -11,6 +11,7 @@ use RuntimeException;
 use UnexpectedValueException;
 use function array_key_exists;
 use function array_search;
+use function assert;
 use function explode;
 use function file_exists;
 use function is_bool;
@@ -32,7 +33,7 @@ use function is_writable;
 final class Expect
 {
     /** @var string[] */
-    static private $customExceptions = [];
+    static private array $customExceptions = [];
 
     private function __construct()
     {
@@ -83,7 +84,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isNotEmpty($value): void
+    static public function isNotEmpty(&$value): void
     {
         if ($value !== null && !empty($value) && $value !== '0.0') {
             return;
@@ -95,7 +96,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isNumeric($value): void
+    static public function isNumeric(&$value): void
     {
         if (is_int($value) || (is_string($value) && is_numeric($value)) || is_float($value)) {
             return;
@@ -107,7 +108,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isInt($value): void
+    static public function isInt(&$value): void
     {
         if (is_int($value)) {
             return;
@@ -119,7 +120,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isFloat($value): void
+    static public function isFloat(&$value): void
     {
         if (is_float($value)) {
             return;
@@ -131,7 +132,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isBool($value): void
+    static public function isBool(&$value): void
     {
         if (is_bool($value)) {
             return;
@@ -143,7 +144,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isObject($value): void
+    static public function isObject(&$value): void
     {
         if (is_object($value) && !is_callable($value)) {
             return;
@@ -155,7 +156,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isString($value): void
+    static public function isString(&$value): void
     {
         if (is_string($value)) {
             return;
@@ -167,7 +168,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isArray($value): void
+    static public function isArray(&$value): void
     {
         if (is_array($value)) {
             return;
@@ -180,7 +181,7 @@ final class Expect
      * @param mixed $value
      * @param string $expectedType
      */
-    static public function isInstanceOf($value, string $expectedType): void
+    static public function isInstanceOf(&$value, string $expectedType): void
     {
         if ($value instanceof $expectedType) {
             return;
@@ -192,7 +193,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isNull($value): void
+    static public function isNull(&$value): void
     {
         if ($value === null) {
             return;
@@ -204,7 +205,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isNotNull($value): void
+    static public function isNotNull(&$value): void
     {
         if ($value !== null) {
             return;
@@ -217,7 +218,7 @@ final class Expect
      * @param mixed $value
      * @param mixed $maxValue
      */
-    static public function isLowerThan($value, $maxValue): void
+    static public function isLowerThan(&$value, $maxValue): void
     {
         if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && $value < $maxValue) {
             return;
@@ -230,7 +231,7 @@ final class Expect
      * @param mixed $value
      * @param mixed $maxValue
      */
-    static public function isLowerThanOrEqual($value, $maxValue): void
+    static public function isLowerThanOrEqual(&$value, $maxValue): void
     {
         if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && $value <= $maxValue) {
             return;
@@ -243,7 +244,7 @@ final class Expect
      * @param mixed $value
      * @param mixed $minValue
      */
-    static public function isGreaterThan($value, $minValue): void
+    static public function isGreaterThan(&$value, $minValue): void
     {
         if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && $value > $minValue) {
             return;
@@ -256,7 +257,7 @@ final class Expect
      * @param mixed $value
      * @param mixed $minValue
      */
-    static public function isGreaterThanOrEqual($value, $minValue): void
+    static public function isGreaterThanOrEqual(&$value, $minValue): void
     {
         if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && $value >= $minValue) {
             return;
@@ -268,7 +269,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isCallable($value): void
+    static public function isCallable(&$value): void
     {
         if (is_callable($value)) {
             return;
@@ -280,7 +281,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isInvokable($value): void
+    static public function isInvokable(&$value): void
     {
         if (is_callable([$value, '__invoke'])) {
             return;
@@ -293,7 +294,7 @@ final class Expect
      * @param mixed $value
      * @param mixed[] $array
      */
-    static public function hasArrayValue($value, array $array): void
+    static public function hasArrayValue(&$value, array $array): void
     {
         if ((is_string($value) || is_numeric($value)) && array_search($value, $array) !== false) {
             return;
@@ -306,7 +307,7 @@ final class Expect
      * @param mixed $value
      * @param mixed[] $array
      */
-    static public function hasArrayKey($value, array $array): void
+    static public function hasArrayKey(&$value, array $array): void
     {
         if ((is_string($value) || is_int($value)) && array_key_exists($value, $array) !== false) {
             return;
@@ -318,7 +319,7 @@ final class Expect
     /**
      * @param string $file
      */
-    static public function isFile(string $file): void
+    static public function isFile(string &$file): void
     {
         if (file_exists($file) && is_file($file)) {
             return;
@@ -330,7 +331,7 @@ final class Expect
     /**
      * @param string $file
      */
-    static public function isReadableFile(string $file): void
+    static public function isReadableFile(string &$file): void
     {
         if (file_exists($file) && is_file($file) && is_readable($file)) {
             return;
@@ -342,7 +343,7 @@ final class Expect
     /**
      * @param string $file
      */
-    static public function isWritableFile(string $file): void
+    static public function isWritableFile(string &$file): void
     {
         if (file_exists($file) && is_file($file) && is_writable($file)) {
             return;
@@ -354,7 +355,7 @@ final class Expect
     /**
      * @param string $path
      */
-    static public function isPath(string $path): void
+    static public function isPath(string &$path): void
     {
         if (is_dir($path)) {
             return;
@@ -366,7 +367,7 @@ final class Expect
     /**
      * @param string $path
      */
-    static public function isReadablePath(string $path): void
+    static public function isReadablePath(string &$path): void
     {
         if (is_dir($path) && is_readable($path)) {
             return;
@@ -378,7 +379,7 @@ final class Expect
     /**
      * @param string $path
      */
-    static public function isWritablePath(string $path): void
+    static public function isWritablePath(string &$path): void
     {
         if (is_dir($path) && is_writable($path)) {
             return;
@@ -390,7 +391,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isCountable($value): void
+    static public function isCountable(&$value): void
     {
         if (is_countable($value)) {
             return;
@@ -402,7 +403,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isIterable($value): void
+    static public function isIterable(&$value): void
     {
         if (is_iterable($value)) {
             return;
@@ -414,7 +415,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isResource($value): void
+    static public function isResource(&$value): void
     {
         if (is_resource($value)) {
             return;
@@ -427,7 +428,7 @@ final class Expect
      * @param mixed $object
      * @param string $parentClass
      */
-    static public function isSubClassOf($object, string $parentClass): void
+    static public function isSubClassOf(&$object, string $parentClass): void
     {
         if ((is_string($object) || is_object($object)) && is_subclass_of($object, $parentClass, true)) {
             return;
@@ -439,7 +440,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isNotFalse($value): void
+    static public function isNotFalse(&$value): void
     {
         if ($value !== false) {
             return;
@@ -451,7 +452,7 @@ final class Expect
     /**
      * @param mixed $value
      */
-    static public function isNotTrue($value): void
+    static public function isNotTrue(&$value): void
     {
         if ($value !== true) {
             return;
@@ -463,7 +464,7 @@ final class Expect
     /**
      * @param iterable<mixed> $iterable
      */
-    static public function isIterableOf(iterable $iterable, string $type): void
+    static public function isIterableOf(iterable &$iterable, string $type): void
     {
         foreach ($iterable as $item) {
             if (!$item instanceof $type) {
