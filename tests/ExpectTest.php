@@ -38,15 +38,38 @@ class ExpectTest extends TestCase
 
     public function testShouldUseProvidedCustomException(): void
     {
-        self::expectException(RuntimeException::class);
-
-        Expect::isTrue(false);
-
         Expect::registerCustomException('isTrue', InvalidArgumentException::class);
 
         self::expectException(InvalidArgumentException::class);
 
         Expect::isTrue(false);
+    }
+
+    public function testShouldUseProvidedCustomExceptionCallableWithException(): void
+    {
+        $value = false;
+
+        Expect::registerCustomException('isTrue', function() use (&$value) {
+            $value = true;
+        });
+
+        self::expectException(RuntimeException::class);
+
+        Expect::isTrue(false);
+        self::assertTrue($value);
+    }
+
+    public function testShouldUseProvidedCustomExceptionCallableWithoutException(): void
+    {
+        $value = false;
+
+        Expect::registerCustomException('isTrue', function() use (&$value) {
+            $value = true;
+            return false;
+        });
+
+        Expect::isTrue(false);
+        self::assertTrue($value);
     }
 
     public function testShouldResetCustomsExceptions(): void

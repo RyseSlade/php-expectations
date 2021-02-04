@@ -11,7 +11,7 @@ use RuntimeException;
 use UnexpectedValueException;
 use function array_key_exists;
 use function array_search;
-use function assert;
+use function call_user_func;
 use function explode;
 use function file_exists;
 use function is_bool;
@@ -32,7 +32,7 @@ use function is_writable;
 
 final class Expect
 {
-    /** @var string[] */
+    /** @var string[]|callable[] */
     static private array $customExceptions = [];
 
     private function __construct()
@@ -46,16 +46,27 @@ final class Expect
 
         if (isset($parts[1])) {
             if (isset(self::$customExceptions[$parts[1]])) {
-                $exceptionType = self::$customExceptions[$parts[1]];
+                if (is_callable(self::$customExceptions[$parts[1]])) {
+                    $returnValue = call_user_func(self::$customExceptions[$parts[1]]);
+
+                    if ($returnValue === false) {
+                        return;
+                    }
+                } else {
+                    $exceptionType = self::$customExceptions[$parts[1]];
+                }
             }
         }
 
         throw new $exceptionType($message);
     }
 
-    static public function registerCustomException(string $method, string $exceptionType): void
+    /**
+     * @param string|callable $handler
+     */
+    static public function registerCustomException(string $method, $handler): void
     {
-        self::$customExceptions[$method] = $exceptionType;
+        self::$customExceptions[$method] = $handler;
     }
 
     static public function resetCustomExceptions(): void

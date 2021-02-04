@@ -42,6 +42,14 @@ In case you want to change the exception thrown for specific tests.
 \Aedon\Expect::isTrue(false); 
 ```
 
+This can also be used to execute a callable when an expectation fails.
+
+```php
+\Aedon\Expect::registerCustomException('isTrue', function() {
+    return false; // omit this if you still want to throw the default exception 
+});
+```
+
 ### Support
 
 Join Discord: https://discord.gg/NEfRerY
