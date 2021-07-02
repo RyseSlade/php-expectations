@@ -8,6 +8,7 @@ use BadFunctionCallException;
 use InvalidArgumentException;
 use RangeException;
 use RuntimeException;
+use Throwable;
 use UnexpectedValueException;
 use function array_key_exists;
 use function array_search;
@@ -30,30 +31,38 @@ use function is_string;
 use function is_subclass_of;
 use function is_writable;
 
-final class Expect
+class Expect
 {
-    /** @var string[]|callable[] */
-    static private array $customExceptions = [];
+    /** @var array<array-key, class-string<Throwable>|callable> */
+    static protected array $customExceptions = [];
 
-    private function __construct()
+    public function __construct()
     {
 
     }
 
-    static private function throwException(string $issuer, string $exceptionType, string $message): void
+    /**
+     * @psalm-param class-string<Throwable> $exceptionType
+     */
+    static protected function throwException(string $issuer, string $exceptionType, string $message): void
     {
         $parts = explode('::', $issuer);
 
         if (isset($parts[1])) {
-            if (isset(self::$customExceptions[$parts[1]])) {
-                if (is_callable(self::$customExceptions[$parts[1]])) {
-                    $returnValue = call_user_func(self::$customExceptions[$parts[1]]);
+            $methodName = $parts[1];
+            $customException = self::$customExceptions[$methodName] ?? null;
+
+            if ($customException) {
+                if (is_callable($customException)) {
+                    /** @var mixed $returnValue */
+                    $returnValue = call_user_func($customException);
 
                     if ($returnValue === false) {
                         return;
                     }
                 } else {
-                    $exceptionType = self::$customExceptions[$parts[1]];
+                    /** @psalm-var class-string<Throwable> $exceptionType */
+                    $exceptionType = self::$customExceptions[$methodName];
                 }
             }
         }
@@ -62,10 +71,14 @@ final class Expect
     }
 
     /**
-     * @param string|callable $handler
+     * @param class-string<Throwable>|callable $handler
      */
     static public function registerCustomException(string $method, $handler): void
     {
+        if (!is_callable($handler) && !is_subclass_of($handler, Throwable::class)) {
+            throw new InvalidArgumentException();
+        }
+
         self::$customExceptions[$method] = $handler;
     }
 
@@ -235,7 +248,7 @@ final class Expect
             return;
         }
 
-        self::throwException(__METHOD__, RangeException::class, 'Value must be lower than ' . $maxValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be lower than');
     }
 
     /**
@@ -248,7 +261,7 @@ final class Expect
             return;
         }
 
-        self::throwException(__METHOD__, RangeException::class, 'Value must be lower than or equal ' . $maxValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be lower than or equal');
     }
 
     /**
@@ -261,7 +274,7 @@ final class Expect
             return;
         }
 
-        self::throwException(__METHOD__, RangeException::class, 'Value must be greater than ' . $minValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be greater than');
     }
 
     /**
@@ -274,7 +287,7 @@ final class Expect
             return;
         }
 
-        self::throwException(__METHOD__, RangeException::class, 'Value must be greater than or equal ' . $minValue);
+        self::throwException(__METHOD__, RangeException::class, 'Value must be greater than or equal');
     }
 
     /**
@@ -305,7 +318,7 @@ final class Expect
      * @param mixed $value
      * @param mixed[] $array
      */
-    static public function hasArrayValue(&$value, array $array): void
+    static public function hasArrayValue(&$value, array &$array): void
     {
         if ((is_string($value) || is_numeric($value)) && array_search($value, $array) !== false) {
             return;
@@ -318,7 +331,7 @@ final class Expect
      * @param mixed $value
      * @param mixed[] $array
      */
-    static public function hasArrayKey(&$value, array $array): void
+    static public function hasArrayKey(&$value, array &$array): void
     {
         if ((is_string($value) || is_int($value)) && array_key_exists($value, $array) !== false) {
             return;
@@ -477,6 +490,7 @@ final class Expect
      */
     static public function isIterableOf(iterable &$iterable, string $type): void
     {
+        /** @var mixed $item */
         foreach ($iterable as $item) {
             if (!$item instanceof $type) {
                 self::throwException(__METHOD__, InvalidArgumentException::class, 'Iterable must be instance of ' . $type);

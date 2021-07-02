@@ -22,18 +22,14 @@ class DerivedStdClass extends stdClass
 
 }
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class ExpectTest extends TestCase
 {
     protected function setUp(): void
     {
         Expect::resetCustomExceptions();
-    }
-
-    public function testShouldThrowErrorOnConstruct(): void
-    {
-        self::expectException(Error::class);
-
-        new Expect();
     }
 
     public function testShouldUseProvidedCustomException(): void
@@ -98,7 +94,7 @@ class ExpectTest extends TestCase
     /**
      * @dataProvider provideIsTrueData
      */
-    public function testIsTrueShouldThrowException($value, bool $expectException): void
+    public function testIsTrueShouldThrowException(bool $value, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(RuntimeException::class);
@@ -122,7 +118,7 @@ class ExpectTest extends TestCase
     /**
      * @dataProvider provideIsFalseData
      */
-    public function testIsFalseShouldThrowException($value, bool $expectException): void
+    public function testIsFalseShouldThrowException(bool $value, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(RuntimeException::class);
@@ -160,6 +156,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsNotEmptyData
+     * @param mixed $value
      */
     public function testIsNotEmptyShouldThrowException($value, bool $expectException): void
     {
@@ -199,6 +196,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsNumericData
+     * @param mixed $value
      */
     public function testIsNumericShouldThrowException($value, bool $expectException): void
     {
@@ -238,6 +236,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsIntData
+     * @param mixed $value
      */
     public function testIsIntShouldThrowException($value, bool $expectException): void
     {
@@ -277,6 +276,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsFloatData
+     * @param mixed $value
      */
     public function testIsFloatShouldThrowException($value, bool $expectException): void
     {
@@ -316,6 +316,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsBoolData
+     * @param mixed $value
      */
     public function testIsBoolShouldThrowException($value, bool $expectException): void
     {
@@ -355,6 +356,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsObjectData
+     * @param mixed $value
      */
     public function testIsObjectShouldThrowException($value, bool $expectException): void
     {
@@ -394,6 +396,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsStringData
+     * @param mixed $value
      */
     public function testIsStringShouldThrowException($value, bool $expectException): void
     {
@@ -433,6 +436,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsArrayData
+     * @param mixed $value
      */
     public function testIsArrayShouldThrowException($value, bool $expectException): void
     {
@@ -472,6 +476,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsInstanceOfData
+     * @param mixed $value
      */
     public function testIsInstanceOfShouldThrowException($value, bool $expectException): void
     {
@@ -511,6 +516,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsNullData
+     * @param mixed $value
      */
     public function testIsNullShouldThrowException($value, bool $expectException): void
     {
@@ -550,6 +556,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsNotNullData
+     * @param mixed $value
      */
     public function testIsNotNullShouldThrowException($value, bool $expectException): void
     {
@@ -590,6 +597,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsLowerThanData
+     * @param mixed $value
+     * @param mixed $maxValue
      */
     public function testIsLowerThanShouldThrowException($value, $maxValue, bool $expectException): void
     {
@@ -630,6 +639,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsLowerThanOrEqualData
+     * @param mixed $value
+     * @param mixed $maxValue
      */
     public function testIsLowerThanOrEqualShouldThrowException($value, $maxValue, bool $expectException): void
     {
@@ -670,6 +681,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsGreaterThanData
+     * @param mixed $value
+     * @param mixed $minValue
      */
     public function testIsGreaterThanOShouldThrowException($value, $minValue, bool $expectException): void
     {
@@ -710,6 +723,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsGreaterThanOrEqualData
+     * @param mixed $value
+     * @param mixed $minValue
      */
     public function testIsGreaterThanOrEqualShouldThrowException($value, $minValue, bool $expectException): void
     {
@@ -749,6 +764,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsCallableData
+     * @param mixed $value
      */
     public function testIsCallableShouldThrowException($value, bool $expectException): void
     {
@@ -788,6 +804,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsInvokableData
+     * @param mixed $value
      */
     public function testIsInvokableShouldThrowException($value, bool $expectException): void
     {
@@ -830,6 +847,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideHasArrayValueData
+     * @param mixed $value
      */
     public function testHasArrayValueShouldThrowException($value, bool $expectException): void
     {
@@ -837,7 +855,9 @@ class ExpectTest extends TestCase
             self::expectException(UnexpectedValueException::class);
         }
 
-        Expect::hasArrayValue($value, [1, 2, 3]);
+        $testArray = [1, 2, 3];
+
+        Expect::hasArrayValue($value, $testArray);
 
         if (!$expectException) {
             self::assertTrue(true);
@@ -872,6 +892,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideHasArrayKeyData
+     * @param mixed $value
      */
     public function testHasArrayKeyShouldThrowException($value, bool $expectException): void
     {
@@ -879,7 +900,9 @@ class ExpectTest extends TestCase
             self::expectException(UnexpectedValueException::class);
         }
 
-        Expect::hasArrayKey($value, [1 => 1, 2 => 2, 3 => 3]);
+        $testArray = [1 => 1, 2 => 2, 3 => 3];
+
+        Expect::hasArrayKey($value, $testArray);
 
         if (!$expectException) {
             self::assertTrue(true);
@@ -995,6 +1018,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsCountableData
+     * @param mixed $value
      */
     public function testIsCountableShouldThrowException($value, bool $expectException): void
     {
@@ -1034,6 +1058,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsIterableData
+     * @param mixed $value
      */
     public function testIsIterableShouldThrowException($value, bool $expectException): void
     {
@@ -1073,6 +1098,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsResourceData
+     * @param mixed $value
      */
     public function testIsResourceShouldThrowException($value, bool $expectException): void
     {
@@ -1113,6 +1139,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsSubclassOfData
+     * @param mixed $value
      */
     public function testIsSubclassOfShouldThrowException($value, bool $expectException): void
     {
@@ -1152,6 +1179,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsNotFalseData
+     * @param mixed $value
      */
     public function testIsNotFalseShouldThrowException($value, bool $expectException): void
     {
@@ -1191,6 +1219,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsNotTrueData
+     * @param mixed $value
      */
     public function testIsNotTrueShouldThrowException($value, bool $expectException): void
     {
@@ -1217,6 +1246,7 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsIterableOfData
+     * @param mixed $value
      */
     public function testIsIterableOfShouldThrowException(iterable $iterable, string $type, bool $expectException): void
     {
