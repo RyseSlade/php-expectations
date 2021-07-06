@@ -7,7 +7,6 @@ namespace Aedon\Test;
 use Aedon\Expect;
 use ArrayIterator;
 use BadFunctionCallException;
-use Error;
 use InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -16,11 +15,7 @@ use RuntimeException;
 use SplFileInfo;
 use stdClass;
 use UnexpectedValueException;
-
-class DerivedStdClass extends stdClass
-{
-
-}
+use function gettype;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
@@ -1133,7 +1128,7 @@ class ExpectTest extends TestCase
             [false, true],
             [new stdClass(), true],
             [function() {}, true],
-            [new DerivedStdClass(), false],
+            [new class extends stdClass {}, false],
         ];
     }
 
@@ -1241,14 +1236,31 @@ class ExpectTest extends TestCase
             [[1, 2, 3], stdClass::class, true],
             [new ArrayIterator([new stdClass(), new stdClass()]), stdClass::class, false],
             [new ArrayIterator([1, 2, 3]), SplFileInfo::class, true],
+            [
+                [1, 2, 3],
+                /** @param mixed $item */
+                function($item) {
+                    return gettype($item) === 'integer';
+                },
+                false
+            ],
+            [
+                ['1', '2', 3],
+                /** @param mixed $item */
+                function($item) {
+                    return gettype($item) === 'string';
+                },
+                true
+            ],
         ];
     }
 
     /**
      * @dataProvider provideIsIterableOfData
      * @param mixed $value
+     * @param string|callable $type
      */
-    public function testIsIterableOfShouldThrowException(iterable $iterable, string $type, bool $expectException): void
+    public function testIsIterableOfShouldThrowException(iterable $iterable, $type, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(InvalidArgumentException::class);
