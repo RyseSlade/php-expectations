@@ -307,7 +307,7 @@ class Expect
      * @param mixed $value
      * @param mixed[] $array
      */
-    static public function hasArrayValue(&$value, array &$array): void
+    static public function hasArrayValue($value, array &$array): void
     {
         if ((is_string($value) || is_numeric($value)) && array_search($value, $array) !== false) {
             return;
@@ -320,7 +320,7 @@ class Expect
      * @param mixed $value
      * @param mixed[] $array
      */
-    static public function hasArrayKey(&$value, array &$array): void
+    static public function hasArrayKey($value, array &$array): void
     {
         if ((is_string($value) || is_int($value)) && array_key_exists($value, $array) !== false) {
             return;
@@ -439,7 +439,7 @@ class Expect
 
     /**
      * @param mixed $object
-     * @param string $parentClass
+     * @psalm-param class-string $parentClass
      */
     static public function isSubClassOf(&$object, string $parentClass): void
     {
