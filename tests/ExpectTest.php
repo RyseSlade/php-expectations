@@ -592,10 +592,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsLowerThanData
-     * @param mixed $value
-     * @param mixed $maxValue
      */
-    public function testIsLowerThanShouldThrowException($value, $maxValue, bool $expectException): void
+    public function testIsLowerThanShouldThrowException(mixed $value, int|float $maxValue, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(RangeException::class);
@@ -634,10 +632,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsLowerThanOrEqualData
-     * @param mixed $value
-     * @param mixed $maxValue
      */
-    public function testIsLowerThanOrEqualShouldThrowException($value, $maxValue, bool $expectException): void
+    public function testIsLowerThanOrEqualShouldThrowException(mixed $value, int|float $maxValue, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(RangeException::class);
@@ -676,10 +672,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsGreaterThanData
-     * @param mixed $value
-     * @param mixed $minValue
      */
-    public function testIsGreaterThanOShouldThrowException($value, $minValue, bool $expectException): void
+    public function testIsGreaterThanOShouldThrowException(mixed $value, int|float $minValue, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(RangeException::class);
@@ -718,10 +712,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideIsGreaterThanOrEqualData
-     * @param mixed $value
-     * @param mixed $minValue
      */
-    public function testIsGreaterThanOrEqualShouldThrowException($value, $minValue, bool $expectException): void
+    public function testIsGreaterThanOrEqualShouldThrowException(mixed $value, int|float $minValue, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(RangeException::class);
@@ -887,9 +879,8 @@ class ExpectTest extends TestCase
 
     /**
      * @dataProvider provideHasArrayKeyData
-     * @param mixed $value
      */
-    public function testHasArrayKeyShouldThrowException($value, bool $expectException): void
+    public function testHasArrayKeyShouldThrowException(mixed $value, bool $expectException): void
     {
         if ($expectException) {
             self::expectException(UnexpectedValueException::class);

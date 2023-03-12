@@ -10,10 +10,11 @@ use RangeException;
 use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
+
 use function array_key_exists;
-use function array_search;
 use function call_user_func;
 use function file_exists;
+use function in_array;
 use function is_bool;
 use function is_callable;
 use function is_countable;
@@ -62,7 +63,7 @@ class Expect
     /**
      * @param class-string<Throwable>|callable $handler
      */
-    static public function registerCustomException(string $method, $handler): void
+    static public function registerCustomException(string $method, string|callable $handler): void
     {
         if (!is_callable($handler) && !is_subclass_of($handler, Throwable::class)) {
             throw new InvalidArgumentException();
@@ -94,10 +95,7 @@ class Expect
         self::throwException(__FUNCTION__, RuntimeException::class, 'Expression must be false');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isNotEmpty(&$value): void
+    static public function isNotEmpty(mixed &$value): void
     {
         if ($value !== null && !empty($value) && $value !== '0.0') {
             return;
@@ -106,10 +104,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must not be empty');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isNumeric(&$value): void
+    static public function isNumeric(mixed &$value): void
     {
         if (is_int($value) || (is_string($value) && is_numeric($value)) || is_float($value)) {
             return;
@@ -118,10 +113,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be numeric');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isInt(&$value): void
+    static public function isInt(mixed &$value): void
     {
         if (is_int($value)) {
             return;
@@ -130,10 +122,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be integer');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isFloat(&$value): void
+    static public function isFloat(mixed &$value): void
     {
         if (is_float($value)) {
             return;
@@ -142,10 +131,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be float');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isBool(&$value): void
+    static public function isBool(mixed &$value): void
     {
         if (is_bool($value)) {
             return;
@@ -154,10 +140,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be boolean');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isObject(&$value): void
+    static public function isObject(mixed &$value): void
     {
         if (is_object($value) && !is_callable($value)) {
             return;
@@ -166,10 +149,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be an object');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isString(&$value): void
+    static public function isString(mixed &$value): void
     {
         if (is_string($value)) {
             return;
@@ -178,10 +158,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be string');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isArray(&$value): void
+    static public function isArray(mixed &$value): void
     {
         if (is_array($value)) {
             return;
@@ -191,10 +168,9 @@ class Expect
     }
 
     /**
-     * @param mixed $value
-     * @param string $expectedType
+     * @psalm-param class-string $expectedType
      */
-    static public function isInstanceOf(&$value, string $expectedType): void
+    static public function isInstanceOf(mixed &$value, string $expectedType): void
     {
         if ($value instanceof $expectedType) {
             return;
@@ -203,10 +179,7 @@ class Expect
         self::throwException(__FUNCTION__, UnexpectedValueException::class, 'Value must be instance of ' . $expectedType);
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isNull(&$value): void
+    static public function isNull(mixed &$value): void
     {
         if ($value === null) {
             return;
@@ -215,10 +188,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must be null');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isNotNull(&$value): void
+    static public function isNotNull(mixed &$value): void
     {
         if ($value !== null) {
             return;
@@ -227,62 +197,43 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must not be null');
     }
 
-    /**
-     * @param mixed $value
-     * @param mixed $maxValue
-     */
-    static public function isLowerThan(&$value, $maxValue): void
+    static public function isLowerThan(mixed &$value, int|float $maxValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && $value < $maxValue) {
+        if ((is_int($value) || is_float($value)) && $value < $maxValue) {
             return;
         }
 
         self::throwException(__FUNCTION__, RangeException::class, 'Value must be lower than');
     }
 
-    /**
-     * @param mixed $value
-     * @param mixed $maxValue
-     */
-    static public function isLowerThanOrEqual(&$value, $maxValue): void
+    static public function isLowerThanOrEqual(mixed &$value, int|float $maxValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($maxValue) || is_float($maxValue)) && $value <= $maxValue) {
+        if ((is_int($value) || is_float($value)) && $value <= $maxValue) {
             return;
         }
 
         self::throwException(__FUNCTION__, RangeException::class, 'Value must be lower than or equal');
     }
 
-    /**
-     * @param mixed $value
-     * @param mixed $minValue
-     */
-    static public function isGreaterThan(&$value, $minValue): void
+    static public function isGreaterThan(mixed &$value, int|float $minValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && $value > $minValue) {
+        if ((is_int($value) || is_float($value)) && $value > $minValue) {
             return;
         }
 
         self::throwException(__FUNCTION__, RangeException::class, 'Value must be greater than');
     }
 
-    /**
-     * @param mixed $value
-     * @param mixed $minValue
-     */
-    static public function isGreaterThanOrEqual(&$value, $minValue): void
+    static public function isGreaterThanOrEqual(mixed &$value, int|float $minValue): void
     {
-        if ((is_int($value) || is_float($value)) && (is_int($minValue) || is_float($minValue)) && $value >= $minValue) {
+        if ((is_int($value) || is_float($value)) && $value >= $minValue) {
             return;
         }
 
         self::throwException(__FUNCTION__, RangeException::class, 'Value must be greater than or equal');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isCallable(&$value): void
+    static public function isCallable(mixed &$value): void
     {
         if (is_callable($value)) {
             return;
@@ -291,10 +242,7 @@ class Expect
         self::throwException(__FUNCTION__, BadFunctionCallException::class, 'Value must be callable');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isInvokable(&$value): void
+    static public function isInvokable(mixed &$value): void
     {
         if (is_callable([$value, '__invoke'])) {
             return;
@@ -303,24 +251,16 @@ class Expect
         self::throwException(__FUNCTION__, BadFunctionCallException::class, 'Value must be invokable');
     }
 
-    /**
-     * @param mixed $value
-     * @param mixed[] $array
-     */
-    static public function hasArrayValue($value, array &$array): void
+    static public function hasArrayValue(mixed $value, array &$array): void
     {
-        if ((is_string($value) || is_numeric($value)) && array_search($value, $array) !== false) {
+        if (in_array($value, $array, true)) {
             return;
         }
 
         self::throwException(__FUNCTION__, UnexpectedValueException::class, 'Value must be in array');
     }
 
-    /**
-     * @param mixed $value
-     * @param mixed[] $array
-     */
-    static public function hasArrayKey($value, array &$array): void
+    static public function hasArrayKey(mixed $value, array &$array): void
     {
         if ((is_string($value) || is_int($value)) && array_key_exists($value, $array) !== false) {
             return;
@@ -329,9 +269,6 @@ class Expect
         self::throwException(__FUNCTION__, UnexpectedValueException::class, 'Value must be array key');
     }
 
-    /**
-     * @param string $file
-     */
     static public function isFile(string &$file): void
     {
         if (file_exists($file) && is_file($file)) {
@@ -341,9 +278,6 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'File must be valid');
     }
 
-    /**
-     * @param string $file
-     */
     static public function isReadableFile(string &$file): void
     {
         if (file_exists($file) && is_file($file) && is_readable($file)) {
@@ -353,9 +287,6 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'File must be readable');
     }
 
-    /**
-     * @param string $file
-     */
     static public function isWritableFile(string &$file): void
     {
         if (file_exists($file) && is_file($file) && is_writable($file)) {
@@ -365,9 +296,6 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'File must be writable');
     }
 
-    /**
-     * @param string $path
-     */
     static public function isPath(string &$path): void
     {
         if (is_dir($path)) {
@@ -377,9 +305,6 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Path must be valid');
     }
 
-    /**
-     * @param string $path
-     */
     static public function isReadablePath(string &$path): void
     {
         if (is_dir($path) && is_readable($path)) {
@@ -389,9 +314,6 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Path must be readable');
     }
 
-    /**
-     * @param string $path
-     */
     static public function isWritablePath(string &$path): void
     {
         if (is_dir($path) && is_writable($path)) {
@@ -401,10 +323,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Path must be writable');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isCountable(&$value): void
+    static public function isCountable(mixed &$value): void
     {
         if (is_countable($value)) {
             return;
@@ -413,10 +332,7 @@ class Expect
         self::throwException(__FUNCTION__, UnexpectedValueException::class, 'Value must be countable');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isIterable(&$value): void
+    static public function isIterable(mixed &$value): void
     {
         if (is_iterable($value)) {
             return;
@@ -425,10 +341,7 @@ class Expect
         self::throwException(__FUNCTION__, UnexpectedValueException::class, 'Value must be an iterable');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isResource(&$value): void
+    static public function isResource(mixed &$value): void
     {
         if (is_resource($value)) {
             return;
@@ -438,10 +351,9 @@ class Expect
     }
 
     /**
-     * @param mixed $object
      * @psalm-param class-string $parentClass
      */
-    static public function isSubClassOf(&$object, string $parentClass): void
+    static public function isSubClassOf(mixed &$object, string $parentClass): void
     {
         if ((is_string($object) || is_object($object)) && is_subclass_of($object, $parentClass, true)) {
             return;
@@ -450,10 +362,7 @@ class Expect
         self::throwException(__FUNCTION__, UnexpectedValueException::class, 'Object must be a subclass of ' . $parentClass);
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isNotFalse(&$value): void
+    static public function isNotFalse(mixed &$value): void
     {
         if ($value !== false) {
             return;
@@ -462,10 +371,7 @@ class Expect
         self::throwException(__FUNCTION__, InvalidArgumentException::class, 'Value must not be false');
     }
 
-    /**
-     * @param mixed $value
-     */
-    static public function isNotTrue(&$value): void
+    static public function isNotTrue(mixed &$value): void
     {
         if ($value !== true) {
             return;
@@ -476,9 +382,8 @@ class Expect
 
     /**
      * @param iterable<mixed> $iterable
-     * @param string|callable $type
      */
-    static public function isIterableOf(iterable &$iterable, $type): void
+    static public function isIterableOf(iterable &$iterable, string|callable $type): void
     {
         $expectInstanceOf = is_string($type);
         $expectCallable = is_callable($type);

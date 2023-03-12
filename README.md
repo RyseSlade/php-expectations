@@ -8,7 +8,7 @@ Reduce lines of code with this expectations library. Use expectations for condit
 
 ### Requirements
 
-PHP 7.4+
+PHP 8
 
 ### Usage examples
 
