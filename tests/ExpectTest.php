@@ -15,6 +15,7 @@ use RuntimeException;
 use SplFileInfo;
 use stdClass;
 use UnexpectedValueException;
+
 use function gettype;
 
 /**
@@ -78,7 +79,7 @@ class ExpectTest extends TestCase
         Expect::isTrue(false);
     }
 
-    public function provideIsTrueData(): array
+    static public function provideIsTrueData(): array
     {
         return [
             [true, false],
@@ -102,7 +103,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsFalseData(): array
+    static public function provideIsFalseData(): array
     {
         return [
             [true, true],
@@ -126,7 +127,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsNotEmptyData(): array
+    static public function provideIsNotEmptyData(): array
     {
         return [
             [null, true],
@@ -166,7 +167,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsNumericData(): array
+    static public function provideIsNumericData(): array
     {
         return [
             [null, true],
@@ -206,7 +207,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsIntData(): array
+    static public function provideIsIntData(): array
     {
         return [
             [null, true],
@@ -246,7 +247,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsFloatData(): array
+    static public function provideIsFloatData(): array
     {
         return [
             [null, true],
@@ -286,7 +287,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsBoolData(): array
+    static public function provideIsBoolData(): array
     {
         return [
             [null, true],
@@ -326,7 +327,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsObjectData(): array
+    static public function provideIsObjectData(): array
     {
         return [
             [null, true],
@@ -366,7 +367,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsStringData(): array
+    static public function provideIsStringData(): array
     {
         return [
             [null, true],
@@ -406,7 +407,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsArrayData(): array
+    static public function provideIsArrayData(): array
     {
         return [
             [null, true],
@@ -446,7 +447,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsInstanceOfData(): array
+    static public function provideIsInstanceOfData(): array
     {
         return [
             [null, true],
@@ -486,7 +487,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsNullData(): array
+    static public function provideIsNullData(): array
     {
         return [
             [null, false],
@@ -526,7 +527,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsNotNullData(): array
+    static public function provideIsNotNullData(): array
     {
         return [
             [null, true],
@@ -566,7 +567,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsLowerThanData(): array
+    static public function provideIsLowerThanData(): array
     {
         return [
             [null, 5, true],
@@ -606,7 +607,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsLowerThanOrEqualData(): array
+    static public function provideIsLowerThanOrEqualData(): array
     {
         return [
             [null, 5, true],
@@ -646,7 +647,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsGreaterThanData(): array
+    static public function provideIsGreaterThanData(): array
     {
         return [
             [null, 5, true],
@@ -686,7 +687,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsGreaterThanOrEqualData(): array
+    static public function provideIsGreaterThanOrEqualData(): array
     {
         return [
             [null, 5, true],
@@ -726,7 +727,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsCallableData(): array
+    static public function provideIsCallableData(): array
     {
         return [
             [null, true],
@@ -766,7 +767,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsInvokableData(): array
+    static public function provideIsInvokableData(): array
     {
         return [
             [null, true],
@@ -806,7 +807,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideHasArrayValueData(): array
+    static public function provideHasArrayValueData(): array
     {
         return [
             [null, true],
@@ -851,7 +852,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideHasArrayKeyData(): array
+    static public function provideHasArrayKeyData(): array
     {
         return [
             [null, true],
@@ -979,7 +980,7 @@ class ExpectTest extends TestCase
         Expect::isWritablePath($value);
     }
 
-    public function provideIsCountableData(): array
+    static public function provideIsCountableData(): array
     {
         return [
             [null, true],
@@ -1019,7 +1020,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsIterableData(): array
+    static public function provideIsIterableData(): array
     {
         return [
             [null, true],
@@ -1059,7 +1060,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsResourceData(): array
+    static public function provideIsResourceData(): array
     {
         return [
             [null, true],
@@ -1099,7 +1100,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsSubclassOfData(): array
+    static public function provideIsSubclassOfData(): array
     {
         return [
             [null, true],
@@ -1140,7 +1141,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsNotFalseData(): array
+    static public function provideIsNotFalseData(): array
     {
         return [
             [null, false],
@@ -1180,7 +1181,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsNotTrueData(): array
+    static public function provideIsNotTrueData(): array
     {
         return [
             [null, false],
@@ -1220,7 +1221,7 @@ class ExpectTest extends TestCase
         }
     }
 
-    public function provideIsIterableOfData(): array
+    static  public function provideIsIterableOfData(): array
     {
         return [
             [[new stdClass()], stdClass::class, false],
