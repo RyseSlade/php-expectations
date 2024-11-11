@@ -43,7 +43,7 @@ class Expect
     {
         $customException = self::$customExceptions[$issuer] ?? null;
 
-        if ($customException) {
+        if ($customException !== null) {
             if (is_callable($customException)) {
                 /** @var mixed $returnValue */
                 $returnValue = call_user_func($customException);
