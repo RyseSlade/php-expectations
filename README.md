@@ -1,7 +1,6 @@
 # Aedon PHP Expectations
 
 [![GitHub release](https://img.shields.io/github/v/release/RyseSlade/php-expectations.svg)](https://github.com/RyseSlade/php-expectations/releases/)
-[![Build Status](https://travis-ci.com/RyseSlade/php-expectations.svg?branch=master)](https://travis-ci.com/RyseSlade/php-expectations)
 [![GitHub license](https://img.shields.io/badge/license-MIT-green)](https://github.com/RyseSlade/php-expectations/blob/master/LICENSE)
 
 Reduce lines of code with this expectations library. Use expectations for conditional exceptions.
